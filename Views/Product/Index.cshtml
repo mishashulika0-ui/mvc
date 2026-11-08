@@ -1,0 +1,36 @@
+@model IEnumerable<ProductListItemModel>
+
+@{
+    ViewData["Title"] = "Product list";
+}
+
+<div>
+    <h2>@ViewBag.Title</h2>
+
+    <p>
+        <a class="waves-effect waves-light btn deep-purple darken-4" asp-action="Create">Create product</a>
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Price</td>
+                    <td>@item.CategoryName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,44 @@
+@model CreateProductViewModel
+@{
+    ViewData["Title"] = "Add new product";
+}
+
+<div>
+    <h2>@ViewBag.Title</h2>
+
+    <div class="row">
+        <form asp-action="Create" method="post" class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    @{
+                        var hasNameError = ViewData.ModelState[nameof(Model.Name)]?.Errors.Count > 0;
+                    }
+                    <input name="Name" id="Name" type="text" class="validate @(hasNameError?"invalid":"")">
+                    <label asp-for="Name"></label>
+                    <span asp-validation-for="Name" class="helper-text" data-error="@(hasNameError?ViewData.ModelState[nameof(Model.Name)]?.Errors[0].ErrorMessage:"")"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    @{
+                        var hasPriceError = ViewData.ModelState[nameof(Model.Price)]?.Errors.Count > 0;
+                    }
+                    <input name="Price" id="Price" type="number" class="validate @(hasPriceError?"invalid":"")">
+                    <label asp-for="Price"></label>
+                    <span asp-validation-for="Price" class="helper-text" data-error="@(hasNameError?ViewData.ModelState[nameof(Model.Price)]?.Errors[0].ErrorMessage:"")"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select class="validate invalid" asp-for="CategoryId" asp-items="Model.Categories" name="CategoryId" id="CategoryId">
+                        <option value="">--- Select category ---</option>
+                    </select>
+                    <label asp-for="CategoryId"></label>
+                    <span class="helper-text" data-error="wrong" data-success="right"></span>
+                </div>
+            </div>
+            <button type="submit" class="waves-effect waves-light btn deep-purple darken-4">Save</button>
+            <a class="waves-effect waves-light btn grey" asp-action="Index">Back to products</a>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Main page";
+}
+
+<h1>@ViewData["Message"]</h1>
+
+@* <a href="/Home/SecondPage">Go to second page</a> *@
+<a asp-controller="Home" asp-action="SecondPage">Go to second page</a>
+
+
+@if(TempData["TempMessage"] != null)
+{
+    <b style="color: darkred">@TempData["TempMessage"]</b>
+}
+
+@if(ViewBag.User is not null)
+{
+    <h4>Name: @ViewBag.User.Name</h4>
+    <h4>Surname: @ViewBag.User.Surname</h4>
+    <h4>Age: @ViewBag.User.Age</h4>
+    @* <h4>Age: @ViewBag.User?.Position</h4> *@
+}

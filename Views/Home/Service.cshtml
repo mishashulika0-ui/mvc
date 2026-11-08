@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Services Demo";
+}
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Service</th>
+            <th>Instance1</th>
+            <th>Instance2</th>
+            <th>Behavior</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td><strong>Transient</strong></td>
+            <td>@ViewBag.Transient1</td>
+            <td>@ViewBag.Transient2</td>
+            <td>В рамках одного запиту, будуть створюватися нові екземпляри сервісу. Тобто для кожного посилання свій екземпляр</td>
+        </tr>
+        <tr>
+            <td><strong>Scoped</strong></td>
+            <td>@ViewBag.Scoped1</td>
+            <td>@ViewBag.Scoped2</td>
+            <td>В рамках одного запиту, буде створюватися один об'єкт для усіх посилань, всі посилання посилаються на один інстанс сервісу. При новому запиті, створюється новий екземпляр</td>
+        </tr>
+        <tr>
+            <td><strong>Singleton</strong></td>
+            <td>@ViewBag.Singleton1</td>
+            <td>@ViewBag.Singleton2</td>
+            <td>Завжди один екземпляр, на інстанс додатку. Створюється один раз, і використовується всюди. Створити другий екземпляр неможливо</td>
+        </tr>
+    </tbody>
+</table>
