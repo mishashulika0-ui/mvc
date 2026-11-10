@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using p48_lessons_asp.Models;
+using System.Collections.Generic;
 
 namespace p48_lessons_asp.Controllers
 {
     public class ProductController : Controller
     {
         // DbContext
-        private static List<ProductListItemModel> _products = new()
+        private static List<ProductListItemModel> products = new()
         {
             new() {Name="Macbook Pro M4", Price = 90000, CategoryName="Most expensive gadgets(Apple)"},
             new() {Name="Samsung Washmachine", Price = 30000, CategoryName = "Appliances"}
@@ -21,7 +22,81 @@ namespace p48_lessons_asp.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(_products);
+            return View(products);
+        }
+
+        [HttpGet]
+        [Route("products")]
+        public IActionResult Products([FromQuery] int? startFrom, [FromQuery] int? endsWith)
+        {
+            if (startFrom.HasValue)
+            {
+                if (startFrom.Value < 0 || startFrom.Value > products.Count - 1)
+                {
+                    return BadRequest(new
+                    {
+                        Status = 400,
+                        Message = $"Start from must be in 0-{products.Count - 1}"
+                    });
+                }
+            }
+
+            if (endsWith.HasValue)
+            {
+                if (endsWith.Value < 0 || endsWith.Value > products.Count - 1)
+                {
+                    return BadRequest(new
+                    {
+                        Status = 400,
+                        Message = $"endsWith must be in 0-{products.Count - 1}"
+                    });
+                }
+            }
+
+            if (startFrom.HasValue && endsWith.HasValue && startFrom.Value > endsWith.Value)
+            {
+                return BadRequest(new
+                {
+                    Status = 400,
+                    Message = "startFrom cannot be greater than endsWith"
+                });
+            }
+
+            if (!startFrom.HasValue && !endsWith.HasValue)
+            {
+                return Ok(new
+                {
+                    Status = 200,
+                    Message = "Ok",
+                    Products = products
+                });
+            }
+
+            int start = 0;
+            int end = products.Count - 1;
+
+            if (startFrom.HasValue)
+            {
+                start = startFrom.Value;
+            }
+
+            if (endsWith.HasValue)
+            {
+                end = endsWith.Value;
+            }
+
+            var result = new List<ProductListItemModel>();
+            for (int i = start; i <= end; i++)
+            {
+                result.Add(products[i]);
+            }
+
+            return Ok(new
+            {
+                Status = 200,
+                Message = "Ok",
+                Products = result
+            });
         }
 
         [HttpGet]
@@ -34,22 +109,22 @@ namespace p48_lessons_asp.Controllers
 
             return View(viewModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(CreateProductViewModel model)
         {
-
             /*
             CSRF-атака(Cross-Site-Request-Forgery) - суть атаки наступна:
             Користувач залогінився на вашому сайті, для нього сформувався токен, який зберігається у кукі. Є ризик що цим кукі може скористуватися інший ресурс, який може бути шкідливими, цей ресурс, зможе спробувати використати ваш кукі, щоб відправити запит на сайт в якому у вас є авторизація.
             */
             if (!ModelState.IsValid)
             {
-                model.Categories = new(_categories, "Key","Value", model.CategoryId);
+                model.Categories = new(_categories, "Key", "Value", model.CategoryId);
                 return View(model);
             }
 
-            _products.Add(new ProductListItemModel
+            products.Add(new ProductListItemModel
             {
                 Name = model.Name,
                 Price = model.Price,
